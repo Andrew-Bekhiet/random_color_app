@@ -28,19 +28,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final themeNotifier = ref.watch(themeNotifierProvider);
-
     return Scaffold(
       appBar: AppBar(title: const Text('Random Color App')),
       body: GestureDetector(
-        onTap:
-            () =>
-                themeNotifier.currentTheme = ThemeData.from(
-                  colorScheme: ColorScheme.fromSeed(
-                    seedColor: _getNewRandomColor(),
-                  ),
-                ),
-        child: const Center(child: Text('Hello there')),
+        onTap: () {
+          final themeNotifier = ref.read(themeNotifierProvider);
+
+          themeNotifier.currentTheme = ThemeData.from(
+            colorScheme: ColorScheme.fromSeed(seedColor: _getNewRandomColor()),
+          );
+        },
+        child: ColoredBox(
+          color: ColorScheme.of(context).primary,
+          child: const Center(child: Text('Hello there')),
+        ),
       ),
     );
   }
