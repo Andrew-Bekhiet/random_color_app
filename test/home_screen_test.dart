@@ -1,25 +1,28 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:random_color_app/core/theme_notifier.dart';
-import 'package:random_color_app/random_color_app.dart';
+import 'package:random_color_app/home_screen.dart';
 
 void main() {
   group('Home Screen', () {
     const String requiredText = 'Hello there';
 
     testWidgets('Shows "$requiredText"', (tester) async {
-      await tester.pumpWidget(const ProviderScope(child: RandomColorApp()));
+      await tester.pumpWidget(
+        const ProviderScope(child: MaterialApp(home: HomeScreen())),
+      );
 
       expect(find.text(requiredText), findsOneWidget);
     });
 
-    testWidgets('Changes app theme color on tap', (tester) async {
+    testWidgets('Changes theme notifier theme on tap', (tester) async {
       final providerContainer = ProviderContainer();
 
       await tester.pumpWidget(
         UncontrolledProviderScope(
           container: providerContainer,
-          child: const RandomColorApp(),
+          child: const MaterialApp(home: HomeScreen()),
         ),
       );
 
