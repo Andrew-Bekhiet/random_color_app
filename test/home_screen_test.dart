@@ -16,7 +16,9 @@ void main() {
       expect(find.text(requiredText), findsOneWidget);
     });
 
-    testWidgets('Changes theme notifier theme on tap', (tester) async {
+    testWidgets('Changes theme notifier theme on tap with opaque color', (
+      tester,
+    ) async {
       final providerContainer = ProviderContainer();
 
       await tester.pumpWidget(
@@ -28,21 +30,21 @@ void main() {
 
       final themeNotifier = providerContainer.read(themeNotifierProvider);
 
-      final capturedThemes = [themeNotifier.currentTheme];
+      final initialTheme = themeNotifier.currentTheme;
 
       const testRandomNColors = 10;
+      Color previousPrimaryColor = initialTheme.colorScheme.primary;
 
       for (int i = 0; i < testRandomNColors; i++) {
         await tester.tap(find.text(requiredText));
 
         final newCurrentTheme = themeNotifier.currentTheme;
+        final newCurrentPrimaryColor = newCurrentTheme.colorScheme.primary;
 
-        expect(
-          newCurrentTheme.colorScheme.primary,
-          isNot(capturedThemes.last.colorScheme.primary),
-        );
+        expect(newCurrentPrimaryColor, isNot(previousPrimaryColor));
+        expect(newCurrentPrimaryColor.a, 1);
 
-        capturedThemes.add(newCurrentTheme);
+        previousPrimaryColor = newCurrentPrimaryColor;
       }
     });
   });
