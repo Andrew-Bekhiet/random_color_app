@@ -8,7 +8,7 @@
 PRODUCT_NAME = random_color_app
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = randomcolorapp.randomColorApp
+PRODUCT_BUNDLE_IDENTIFIER = dev.andrewbekhiet.randomColorApp
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2025 .random_color_app. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2025 dev.andrewbekhiet. All rights reserved.

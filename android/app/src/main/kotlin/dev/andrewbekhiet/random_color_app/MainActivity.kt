@@ -1,4 +1,4 @@
-package random_color_app.random_color_app
+package dev.andrewbekhiet.random_color_app
 
 import io.flutter.embedding.android.FlutterActivity
 

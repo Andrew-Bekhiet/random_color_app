@@ -89,11 +89,11 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", ".random_color_app" "\0"
+            VALUE "CompanyName", "dev.andrewbekhiet" "\0"
             VALUE "FileDescription", "random_color_app" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "random_color_app" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2025 .random_color_app. All rights reserved." "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2025 dev.andrewbekhiet. All rights reserved." "\0"
             VALUE "OriginalFilename", "random_color_app.exe" "\0"
             VALUE "ProductName", "random_color_app" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
