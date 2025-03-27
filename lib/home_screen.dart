@@ -23,23 +23,23 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final colorScheme = ColorScheme.of(context);
     final primaryColor = colorScheme.primary;
 
-    return Scaffold(
-      appBar: AppBar(title: const Text('Random Color App')),
-      body: GestureDetector(
-        onTap: () {
-          final themeNotifier = ref.read(themeNotifierProvider);
+    return GestureDetector(
+      onTap: () {
+        final themeNotifier = ref.read(themeNotifierProvider);
 
-          final newRandomColor = _getNewRandomColor();
+        final newRandomColor = _getNewRandomColor();
 
-          themeNotifier.currentTheme = ThemeData.from(
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: newRandomColor,
-              primary: newRandomColor,
-              onPrimary: _onColor(newRandomColor),
-            ),
-          );
-        },
-        child: ColoredBox(
+        themeNotifier.currentTheme = ThemeData.from(
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: newRandomColor,
+            primary: newRandomColor,
+            onPrimary: _onColor(newRandomColor),
+          ),
+        );
+      },
+      child: Scaffold(
+        appBar: AppBar(title: const Text('Random Color App')),
+        body: ColoredBox(
           color: primaryColor,
           child: Center(
             child: Text(
