@@ -132,9 +132,7 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
-          artifacts:
-            build/app/outputs/flutter-apk/app-release-v${{ steps.version.outputs.version }}.apk
-            build/ios/app-release-v${{ steps.version.outputs.version }}.ipa
+          artifacts: "build/app/outputs/flutter-apk/app-release-v${{ steps.version.outputs.version }}.apk,build/ios/app-release-v${{ steps.version.outputs.version }}.ipa"
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: v${{ steps.version.outputs.version }}
           generateReleaseNotes: true
