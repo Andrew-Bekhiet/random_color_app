@@ -55,7 +55,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   Color _getNewRandomColor() {
-    final newColorValue = _rng.nextInt(0xffffff); // max 16777216 colors
+    // 256^3 = 16777216 possible colors
+    // + 1 to include last value 0xffffff (white)
+    final newColorValue = _rng.nextInt(0xffffff + 1);
 
     // Always set alpha to 100%, because the alpha channel is not included in
     // the random color range and because we want the color to be opaque
