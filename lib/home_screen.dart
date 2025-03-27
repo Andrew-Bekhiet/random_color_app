@@ -4,7 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:random_color_app/core/theme_notifier.dart';
 
+/// App Default Home Screen
+/// Shows "Hello there" text
+/// and changes the app theme color on tap
 class HomeScreen extends ConsumerStatefulWidget {
+  /// Creates a new instance of [HomeScreen]
   const HomeScreen({super.key});
 
   @override

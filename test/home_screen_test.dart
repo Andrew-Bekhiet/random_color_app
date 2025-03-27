@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:random_color_app/core/theme_notifier.dart';
-import 'package:random_color_app/main.dart';
+import 'package:random_color_app/random_color_app.dart';
 
 void main() {
   group('Home Screen', () {
