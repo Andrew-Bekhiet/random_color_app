@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:random_color_app/core/theme_notifier.dart';
-import 'package:random_color_app/home_screen.dart' show HomeScreen;
+import 'package:random_color_app/random_color_app.dart';
+
+export 'core/theme_notifier.dart';
+export 'home_screen.dart';
 
 /// App root widget
 ///

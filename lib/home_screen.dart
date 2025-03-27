@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:random_color_app/core/theme_notifier.dart';
+import 'package:random_color_app/random_color_app.dart';
 
 /// App Default Home Screen
 /// Shows "Hello there" text
