@@ -1,4 +1,4 @@
-name: Application ON Push & PR DO Code check
+name: Application ON Push & PR DO Code check and release
 on: [push, pull_request]
 
 jobs:
@@ -18,7 +18,10 @@ jobs:
         if: steps.check_files.outputs.files_exists == 'true'
         uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
+          cache: true
+          pub-cache-key: "flutter-pub:os:-:channel:-:version:-:arch:"
+          cache-key: "flutter:os:-:channel:-:version:-:arch:"
+          channel: "stable"
       
       - name: Check flutter sdk version
         if: steps.check_files.outputs.files_exists == 'true'
@@ -50,3 +53,89 @@ jobs:
           else
               echo "Tests not found."
           fi
+
+  release-mobile:
+    permissions:
+      contents: write
+
+    needs: code-check
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        # Excludes ubuntu when building ipa only and macos when building apk only
+        exclude:
+          - os: ${{ contains(github.event.head_commit.message, '[ci release ios]') && 'ubuntu-latest' }}
+          - os: ${{ contains(github.event.head_commit.message, '[ci release apk]') && 'macos-latest' }}
+    runs-on: ${{ matrix.os }}
+    if: github.event_name != 'pull_request' && (contains(github.event.head_commit.message, '[ci release]') || contains(github.event.head_commit.message, '[ci release apk]') || contains(github.event.head_commit.message, '[ci release ios]'))
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Get Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          cache: true
+          pub-cache-key: "flutter-pub:os:-:channel:-:version:-:arch:"
+          cache-key: "flutter:os:-:channel:-:version:-:arch:"
+          channel: "stable"
+
+      - name: Set Up Java
+        uses: actions/setup-java@v4
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        with:
+          cache: "gradle"
+          distribution: "corretto"
+          java-version: "17"
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Decode and save android secrets
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        env:
+          ANDROID_SIGNING_KEY: ${{ secrets.ANDROID_SIGNING_KEY }}
+          ANDROID_KEYSTORE_PROPERTIES: ${{ secrets.ANDROID_KEYSTORE_PROPERTIES }}
+        run: |
+          echo $ANDROID_SIGNING_KEY | sed 's/[^A-Za-z0-9+/=]//g' | base64 -d > ./android/app/release.keystore
+          echo $ANDROID_KEYSTORE_PROPERTIES | sed 's/[^A-Za-z0-9+/=]//g' | base64 -d > ./android/app/releaseKey.properties
+
+      - name: Build apk
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        run: flutter build apk
+
+      - name: Build ios
+        if: ${{ matrix.os == 'macos-latest' }}
+        run: flutter build ios --release --no-codesign
+
+      - name: Get version from pubspec.yaml
+        id: version
+        run: |
+          version=$(grep 'version:' pubspec.yaml | awk '{print $2}' | awk -F "+" '{print $1}')
+          echo "version=$version" >> $GITHUB_OUTPUT
+
+      - name: Create an ipa with app version
+        if: ${{ matrix.os == 'macos-latest' }}
+        run: |
+          cd build/ios
+          mv iphoneos Payload
+          zip -r app-release-v${{steps.version.outputs.version}}.ipa Payload
+
+      - name: Add version to APK filename
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        run: |
+          mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/app-release-v${{ steps.version.outputs.version }}.apk
+
+      - name: Create release
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true
+          artifacts:
+            build/app/outputs/flutter-apk/app-release-v${{ steps.version.outputs.version }}.apk
+            build/ios/app-release-v${{ steps.version.outputs.version }}.ipa
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: v${{ steps.version.outputs.version }}
+          generateReleaseNotes: true
