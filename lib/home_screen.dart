@@ -24,19 +24,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final primaryColor = colorScheme.primary;
 
     return GestureDetector(
-      onTap: () {
-        final themeNotifier = ref.read(themeNotifierProvider);
-
-        final newRandomColor = _getNewRandomColor();
-
-        themeNotifier.currentTheme = ThemeData.from(
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: newRandomColor,
-            primary: newRandomColor,
-            onPrimary: _onColor(newRandomColor),
-          ),
-        );
-      },
+      onTap: _changeToRandomTheme,
       child: Scaffold(
         appBar: AppBar(title: const Text('Random Color App')),
         body: ColoredBox(
@@ -48,6 +36,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  void _changeToRandomTheme() {
+    final themeNotifier = ref.read(themeNotifierProvider);
+
+    final newRandomColor = _getNewRandomColor();
+
+    themeNotifier.currentTheme = ThemeData.from(
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: newRandomColor,
+        primary: newRandomColor,
+        onPrimary: _onColor(newRandomColor),
       ),
     );
   }
