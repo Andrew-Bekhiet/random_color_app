@@ -18,6 +18,40 @@ class HomeScreen extends ConsumerStatefulWidget {
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   final Random _rng = Random();
 
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = ColorScheme.of(context);
+    final primaryColor = colorScheme.primary;
+
+    return Scaffold(
+      appBar: AppBar(title: const Text('Random Color App')),
+      body: GestureDetector(
+        onTap: () {
+          final themeNotifier = ref.read(themeNotifierProvider);
+
+          final newRandomColor = _getNewRandomColor();
+
+          themeNotifier.currentTheme = ThemeData.from(
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: newRandomColor,
+              primary: newRandomColor,
+              onPrimary: _onColor(newRandomColor),
+            ),
+          );
+        },
+        child: ColoredBox(
+          color: primaryColor,
+          child: Center(
+            child: Text(
+              'Hello there',
+              style: TextStyle(color: colorScheme.onPrimary),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Color _getNewRandomColor() {
     final newColorValue = _rng.nextInt(0xffffff); // max 16777216 colors
 
@@ -26,23 +60,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return Color(newColorValue).withValues(alpha: 1);
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Random Color App')),
-      body: GestureDetector(
-        onTap: () {
-          final themeNotifier = ref.read(themeNotifierProvider);
+  Color _onColor(Color newRandomColor) {
+    const luminanceBreakpoint = 0.55;
 
-          themeNotifier.currentTheme = ThemeData.from(
-            colorScheme: ColorScheme.fromSeed(seedColor: _getNewRandomColor()),
-          );
-        },
-        child: ColoredBox(
-          color: ColorScheme.of(context).primary,
-          child: const Center(child: Text('Hello there')),
-        ),
-      ),
-    );
+    return newRandomColor.computeLuminance() > luminanceBreakpoint
+        ? Colors.black
+        : Colors.white;
   }
 }
