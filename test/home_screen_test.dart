@@ -20,6 +20,7 @@ void main() {
       tester,
     ) async {
       final providerContainer = ProviderContainer();
+      addTearDown(providerContainer.dispose);
 
       await tester.pumpWidget(
         UncontrolledProviderScope(
