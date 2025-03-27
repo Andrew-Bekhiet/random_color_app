@@ -129,7 +129,6 @@ jobs:
           mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/app-release-v${{ steps.version.outputs.version }}.apk
 
       - name: Create release
-        if: ${{ matrix.os == 'ubuntu-latest' }}
         uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
